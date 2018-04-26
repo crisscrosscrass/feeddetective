@@ -1,3 +1,3 @@
 # feeddetective
 
-This project is related to validate shop feeds, nothing more
+This project is related to validate shop feeds
