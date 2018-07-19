@@ -9,7 +9,7 @@ $("#contents").slideToggle("slow");
 //$(".ui-resizable-handle").slideToggle("slow");
 }
 /*================================================================================
-		add fallback to see if something went wrong !
+		add fallback to see if something went wrong
 ==================================================================================*/
 function replacecarriage(string){
 	var t = string.replace(/\s+/g, ' ').trim();
