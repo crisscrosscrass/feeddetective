@@ -1,4 +1,4 @@
-var table;
+﻿var table;
 var checkingState = false;
 function showLog(){
 $("#logStatement").fadeToggle("slow");
@@ -10,7 +10,7 @@ $("#contents").slideToggle("slow");
 }
 /*================================================================================
 		add fallback to see if something went wrong
-		==================================================================================*/
+==================================================================================*/
 function replacecarriage(string){
 	var t = string.replace(/\s+/g, ' ').trim();
     return t;
