@@ -1,61 +1,23 @@
-<html>
-<head>
-<link rel="stylesheet" type="text/css" href="CCC.css?v=<?php echo filemtime('CCC.css') ?>"/>
-</head>
-<body>
-<br>
 <?php
+header("Content-Type: text/event-stream");
+header("Cache-Control: no-cache");
+include('common-functions.php');
+$msg_id = 0;
+
 echo "<strong>Log:</strong><br>";
 ini_set('display_errors', 0);
 
+sendMsg("setting provided Data", $msg_id);
 $feedURL = $_POST['feedURL'];
 $transferDelimiter = $_POST['delimiter'];
 $transferCharset = $_POST['charset'];
 $transferEnclosure = $_POST['enclosure'];
-
-
-
-if ($transferDelimiter == "auto"){
-	$delimiter = "|";
-}elseif ($transferDelimiter == "pipe"){
-	$delimiter = "|";
-}elseif($transferDelimiter == "semicolon"){
-	$delimiter = ";";
-
-}elseif($transferDelimiter == "comma"){
-	$delimiter = ",";
-}elseif($$transferDelimiter == "tab"){
-	$delimiter = "\t";
-}
-
-if ($transferEnclosure == "double"){
-	$enclosure = '"';
-}elseif($transferEnclosure == "single"){
-	$enclosure = "'";
-
-}elseif($transferEnclosure == "empty"){
-	$enclosure = "";
-}
-
-
-
 ?>
 
 
 
 <?php
-
-
-
 $feedURL = $_POST["feedURL"];
-//echo "<br>Server logged URL: <br>";
-//echo $feedURL;
-//echo "<br><br>";
-//$delimiter = transferDelimiter;
-//$charset = $transferCharset;
-//$enclosure = $transferEnclosure;
-
-
 
 $opts = array(
   'http'=>array(
@@ -68,65 +30,16 @@ $opts = array(
 
 
 //echo "<hr>";
-
+sendMsg("Downloading...", $msg_id);
 $context = stream_context_create($opts);
-
 $handle = fopen($feedURL, "r");
-
-
 //phpinfo();
 $handler = fopen($feedURL, "r");
 $tester = fgets($handler,5);
-fclose($handler);
-if( strpos($tester, 'Rar') !== false){
-	echo "detect rar file \n";
-	
-}else if(strpos($tester, 'PK') !== false){
+//fclose($handler);
 
-	echo ("detect zip file \n");
-	/*
-	$zip = new ZipArchive();
-	$opener = $zip->open($_FILES['file']['tmp_name'],ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE);
-	if( $opener !== true){
-		die("Cannot open for writing.");
-	}
-	$readFile = zip_entry_read(0);
-	print_r($readFile);
-	$zip->close();	
-	*/
-	file_put_contents('tmp.zip', file_get_contents($feedURL, true, $context));
-	$zip = zip_open('tmp.zip');
-	$entry = zip_read($zip);
-	zip_entry_open($zip,$entry,"r");
-	$feed = zip_entry_read($entry,zip_entry_filesize($entry));
-	//$feed = fwrite($temp, file_get_contents($feedURL, true, $context));
-	//$result = file_get_contents('zip://$feedURL', true, $context); 
-
-	
-}else if(mb_strpos($tester, "\x1f" . "\x8b" . "\x08", 0, "US-ASCII") !== false){
-
-	echo ("detect gz file \n");
-	$z = gzopen($feedURL,'r') or die("can't open: $php_errormsg");
-	$string = '';
-
-    while ($line = gzgets($z,1024)) {
-        $string .= $line;
-    }
-
-    $feed = $string;
-
-    gzclose($z) or die("can't close: $php_errormsg");
-	
-}else{
-	$feed = file_get_contents($feedURL, true, $context);
-	$filename = basename($feedURL);
-	if ($feed === FALSE) {
-	   die("Error reading file $php_errormsg".$filename);
-	}
-	
-	
-}
-
+sendMsg("detecting compression", $msg_id);
+$feed = detectCompression($feedURL,$tester);
 
 if ($transferCharset == "utf8"){
 	$feed = utf8_encode($feed)."\n";
@@ -143,43 +56,8 @@ if ($transferCharset == "utf8"){
 $array = explode("\n", $feed);
 $firstLine = $array[0];
 $secondline = $array[1];
-/*
-		//-----------------------------------------------------detect Charset BEGIN
-		echo "<h2>Different charset on provided Feed </h2>";
-		$string = $array[0];
-		echo "Autodetection Charset: " . mb_detect_encoding($string,"auto","not found") . "<br>";
-		echo $string."\n";
-		echo "<br>";
-		echo "ASCII ::::::::::::::::::::::";
-		$str = mb_convert_encoding($string, "ASCII", "UTF-8");
-		echo $str."\n";
-		echo "<br>";
-		echo "ISO-8859-1 ::::::::::::::::::::::";
-		$encoding = mb_detect_encoding(mb_convert_encoding($string, "ISO-8859-1", "UTF-8"));
-		echo $encoding;
-		echo "<br>";
-		echo "Windows (ANSI) ::::::::::::::::::::::";
-		$encoding = mb_detect_encoding(mb_convert_encoding($string, "UTF-7", "UTF-8"));
-		echo $encoding;
-		echo "<br>";
-		echo "UTF16 (Encoding) ::::::::::::::::::::::";
-		$encoding = mb_detect_encoding(mb_convert_encoding($string, "UTF-8","UTF-16"));
-		echo $encoding;
-		echo "<br>";
-		
-		echo "(Coding) :::::::::::TEST::::::::::: <br>";
-		$encoding = iconv("ISO-8859-1", "UTF-8", $string);
-		echo $encoding;
-		echo "<br>";
-		echo "<br>";
-		echo "(Coding2) :::::::::::TEST2::::::::::: <br>";
-		$encoding = iconv("UTF-8", "ASCII//TRANSLIT", $string);
-		echo $encoding;
-		echo "<br>";
-		echo "<br>";
 
-
-Test Feeds -------------------------------------------------
+/* Test Feeds
 http://www.nylons-strumpfhosen-shop.de/affili.csv
 
 http://raw.githubusercontent.com/okfn/datapipes/master/test/data/gla.csv
@@ -193,18 +71,10 @@ https://www.eleganteinrichten.de/Ladenzeile/LadenzeileArtikelDatenExport.csv
 Pipe
 https://www.escora-dessous.de/export/ladenzeile-de.csv
 
----
 Charset Issues
 https://get.cpexp.de/gU0fAzClXgFtgEuqRXNKibhslteEPXaKoz9QS-xYxmu31gzyzHnR00Csau069dw3/maciagoffroad_ladenzeilede.csv
-
-----------------------------------------------------------------------------
-
-
 */
 
-//$delimiter = ";";
-//$enclosure = "\'";
-//$enclosure = '\"';
 
 //-----------------------------------------------------detect Delimiter END
 //echo "<hr>";
@@ -236,6 +106,7 @@ if ($transferDelimiter == "auto"){
 	}
 }elseif ($transferDelimiter == "pipe"){
 	$delimiter = "|";
+	sendMsg("using Pipe seperator", $msg_id);
 }elseif($transferDelimiter == "semicolon"){
 	$delimiter = ";";
 
@@ -264,6 +135,8 @@ echo "<br>";
 echo "<strong><u>Second Line Feed: </u></strong><br>".$secondline;
 echo "<br>";
 //-----------------------------------------------------set feed Data into CSV Data BEGIN
+
+sendMsg("create Table", $msg_id);
 $csvData = $feed;
 
 $Data = str_getcsv($csvData, "\n",$enclosure); //parse the rows 
@@ -285,94 +158,22 @@ $teile = explode($delimiter, $feed);
 $maxTeile = sizeof($teile);
 $maxLines = sizeof($lines);
 $maxColumns = sizeof($Column);
-
-/*
-
-echo "<hr>";
-echo $maxData;
-echo $maxRow;
-echo "<h1>Data Sring Array[0][1]</h1>";
-echo "<hr>";
-print_r($Data[0][1]);
-
-echo "<hr>";
-echo $maxTeile;
-echo $maxLines;
-echo "<h1>Data Explode Array[1]</h1>";
-echo "<hr>";
-print_r($teile[1]);
-
-echo "<br>";
-echo "<hr>";
-*/
 ?>
 </div>
 <div id="providedFeedTableContainer">
-<div id="tableHeader">
-<h1> Preview Sheet <span id="greenBG">CSV</span> based on Provided URL </h1>
-<?php
-/*
-echo $teile[0]; // Teil1
-echo $teile[1]; // Teil2
-echo $teile[2]; // Teil3
-echo $teile[3]; // Teil4
-echo "<hr>";
-echo "<hr>";
-*/
-//-----------------------------------------------------set feed Data into CSV Data END
-?>
-</div>
-<?php
-
-
-//-----------------------------------------------------set From Values BEGIN
-
-/*
-print_r ($Data2);	
-
-*/
-$count = array();  // create an empty array
-/*
-foreach($Data2 as $arr) {  
-		$key2 = array_keys($arr); 
-        $count[$key2[0]]++;
-	}
-*/	
-//$maxLines = $count[0];
-//$maxColumns = count($Data2[0]);
-
-$maxLines-=1;
-
-/*========================================================================================================removed selection due loading time
-
-for ($i = 0; $i < $maxColumns; $i++){ // need the max Number for Data2[][this] or Splitted Columns
-	echo "<select>";
-	for ($j = 0; $j < $maxLines; $j++){
-		echo "<option>".$Data2[$j][$i]."</option>"; 
-	}
-	echo "</select>";
-}
-
-
-*/
-
-//-----------------------------------------------------set From Values end
-
-?>
-
+	<div id="tableHeader">
+		<h1> Preview Sheet <span id="greenBG">CSV</span> based on Provided URL </h1>
+	</div>
 <table id="FeedTable" class="display" cellspacing="0" width="100%">
 <?php
+$count = array();  // create an empty array
+$maxLines-=1;
 //-----------------------------------------------------set Table BEGIN
 
 $loopcount = 0;
-
-
-
-	foreach($Data as $key => $val){
-   
+foreach($Data as $key => $val){
 		if ($loopcount < 1) {
 			echo "<tr>";			
-			
 			foreach($val as $k=> $v){ 		// $v is string.
 				echo "<th>";			
 				echo strip_tags($v);
@@ -380,46 +181,17 @@ $loopcount = 0;
 				} 
 			echo"</tr>";
 			$loopcount++;
-			
 			} 
 		else {
 			echo "<tr>";
-	  
 				foreach($val as $k=> $v){ 		// $v is string. 
 				echo "<td>";
 				echo strip_tags($v);
 				echo "</td>"; 
 				} 
-	
 			echo"</tr>";
 	}
-	
-	
-	
 }
-
-
-
-
-
-//------------------Testing Purpuses-----------------------------------set Table BEGIN
-/*$i=0;
-
-	while($i< $maxLines){
-		echo  $lines[$i]."<br>".PHP_EOL;
-		$i++;
-	}
-
-foreach ($line as $line){
-	echo "<tr>";
-	foreach ($line as $teile){
-		echo "<td>$teile</td>";
-	}
-	echo "</tr>
-}
-
-*/
-//-----------------------------------------------------set Table END
 
 ?>
 </table>

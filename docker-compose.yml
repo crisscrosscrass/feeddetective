@@ -1,0 +1,10 @@
+version: '2'
+services:
+  feed-detective:
+    build: .
+    image: feeddetective:latest
+    container_name: feeddetective.office.vm
+    ports:
+      - 8080:80
+    volumes:
+    - .:/feed-detective 

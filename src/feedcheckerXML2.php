@@ -1,16 +1,16 @@
-<html>
-<head>
-<link rel="stylesheet" type="text/css" href="CCC.css?v=<?php echo filemtime('CCC.css') ?>"/>
-</head>
-<body>
-<br>
 <?php
+header("Content-Type: text/event-stream");
+header("Cache-Control: no-cache");
+include('common-functions.php');
+$msg_id = 0;
+
 echo "<strong>Log:</strong><br>";
 ini_set('display_errors', 0);
 $feedURL = $_POST['feedURL'];
 $transferParentNode = $_POST['parentnode'];
 $transferItemNode = $_POST['itemnode'];
 
+sendMsg("Downloading...", $msg_id);
 echo "Your provided url is <strong> $feedURL </strong><br>";
 echo "Your provided parentNode is:<strong> $transferParentNode </strong><br>";
 echo "Your provided itemNode is:<strong> $transferItemNode </strong><br>";
@@ -19,6 +19,11 @@ echo "Your provided itemNode is:<strong> $transferItemNode </strong><br>";
 
 
 <?php
+
+
+sendMsg("reading Raw Feed Data", $msg_id);
+sendMsg("detecting xml nodes", $msg_id);
+sendMsg("create Table", $msg_id);
 
 $feedURL = $_POST["feedURL"]; //echo "<br>Server logged URL: <br>";
 /*
@@ -165,58 +170,6 @@ $count_Attributes = count($result);
 
 print_r(array_filter($result, 'strlen'));
 echo '<br>';
-/*
- $element_name2 = array();                                    //get all xml element name
- foreach ($xml->xpath("//$parentNode/$itemNode") as $value2) {
-	 $element_name2[] = $value2->getName();
-	 }
-print_r ($element_name2)."<br>";
-
-
-
- 
- $element_name3 = array();                                    //get all xml element name
- foreach ($xml->children()->children()->children() as $value3) {
-	 $element_name3[] = $value3->getName();
-	 }
-
-
-
-echo "Preview 1st Level xml Nodes:<br>";
-echo $element_name2[0]."<br>";
-echo $element_name2[1]."<br>";
-echo $element_name2[2]."<br>";
-echo $element_name2[3]."<br>";
-echo $element_name2[4]."<br>";
-echo $element_name2[5]."<br>";
-echo "<br>";
-echo "<br>";
-echo "Preview 2nd Level xml Nodes:<br>";
-echo $element_name[0]."<br>";
-echo $element_name[1]."<br>";
-echo $element_name[2]."<br>";
-echo $element_name[3]."<br>";
-echo $element_name[4]."<br>";
-echo $element_name[5]."<br>";
-echo $element_name[6]."<br>";
-echo $element_name[7]."<br>";
-echo $element_name[8]."<br>";
-echo $element_name[9]."<br>";
-echo "<br>"; 
-echo "<br>"; 
-echo "Preview 3nd Level xml Nodes:<br>";
-echo $element_name3[0]."<br>";
-echo $element_name3[1]."<br>";
-echo $element_name3[2]."<br>";
-echo $element_name3[3]."<br>";
-echo $element_name3[4]."<br>";
-echo $element_name3[5]."<br>";
-echo $element_name3[6]."<br>";
-echo $element_name3[7]."<br>";
-echo $element_name3[8]."<br>";
-echo $element_name3[9]."<br>";
-
-*/
 
 
 ?>
@@ -227,12 +180,7 @@ echo $element_name3[9]."<br>";
 <?php
 
 
-/*
-
-
-
-
-Test Feeds -------------------------------------------------
+/* Test Feeds
 http://raw.githubusercontent.com/okfn/datapipes/master/test/data/gla.csv
 
 Comma

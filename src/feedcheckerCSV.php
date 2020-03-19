@@ -1,156 +1,5 @@
-<html>
-<head>
-<link rel="stylesheet" type="text/css" href="CCC.css?v=<?php echo filemtime('CCC.css') ?>"/>
-</head>
-<body>
-<br>
 <?php
-echo "<strong>Log:</strong><br>";
 /*
-$feedURL = $_POST['feedURL'];
-
-echo "Your url is $feedURL <br>";
-*/
-?>
-<div id="logStatement">
-<?php
-
-/*
-error_reporting(~0);
-ini_set('display_errors', 1);
-*/
-
-$feedURL = $_POST["feedURL"];
-//$feedURL = "ftp://ftp-11577-147765031:15903304@ftp.semtrack.de/ladenzeile_de.csv";
-//echo "<br>Server logged URL: <br>";
-//echo $feedURL;
-//echo "<br><br>";
-echo "Your provided url is <strong> $feedURL </strong><br>";
-
-/*
-$opts = array(
-  'http'=>array(
-    'method'=>"GET",
-    'header'=>"Accept-language: en\r\n" .
-              "Cookie: foo=bar\r\n"
-  )
-);
-*/
-$opts = array(
-  'http'=>array(
-    'method'=>"POST",
-    'header'=>
-      "Accept-language: en\r\n".
-      "Content-type: application/x-www-form-urlencoded\r\n",
-    'content'=>http_build_query(array('foo'=>'bar'))
-  )
-);
-
-//echo "<hr>";
-
-
-$context = stream_context_create($opts);
-
-$handle = fopen($feedURL, "r");
-
-
-//phpinfo();
-$handler = fopen($feedURL, "r");
-$tester = fgets($handler,5);
-//fclose($handler);
-if( strpos($tester, 'Rar') !== false){
-	echo "detect rar file \n";
-	
-}else if(strpos($tester, 'PK') !== false){
-
-	echo ("detect zip file \n");
-	/*
-	$zip = new ZipArchive();
-	$opener = $zip->open($_FILES['file']['tmp_name'],ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE);
-	if( $opener !== true){
-		die("Cannot open for writing.");
-	}
-	$readFile = zip_entry_read(0);
-	print_r($readFile);
-	$zip->close();	
-	*/
-	file_put_contents('tmp.zip', file_get_contents($feedURL, true, $context));
-	$zip = zip_open('tmp.zip');
-	$entry = zip_read($zip);
-	zip_entry_open($zip,$entry,"r");
-	$feed = zip_entry_read($entry,zip_entry_filesize($entry));
-	//$feed = fwrite($temp, file_get_contents($feedURL, true, $context));
-	//$result = file_get_contents('zip://$feedURL', true, $context); 
-
-	
-}else if(mb_strpos($tester, "\x1f" . "\x8b" . "\x08", 0, "US-ASCII") !== false){
-
-	echo ("detect gz file \n");
-	$z = gzopen($feedURL,'r') or die("can't open: $php_errormsg");
-	$string = '';
-
-    while ($line = gzgets($z,1024)) {
-        $string .= $line;
-    }
-
-    $feed = $string;
-
-    gzclose($z) or die("can't close: $php_errormsg");
-	
-}else{
-	$feed = file_get_contents($feedURL);
-	$filename = basename($feedURL);
-	
-	if ($feed === FALSE) {
-				
-	   echo ("Error reading source at: ".$feedURL . "<br>"); 
-	   
-	   die("Error: reading file ".$filename);
-	}
-	
-	
-}
-
-$array = explode("\n", $feed);
-$firstLine = $array[0];
-$secondline = $array[1];
-//-----------------------------------------------------detect Charset BEGIN
-//echo "<h2>Different charset on provided Feed </h2>";
-$string = $array[0];
-echo "Autodetection Charset: " . mb_detect_encoding($string,"auto","not found") . "<br>";
-/*echo $string."\n";
-echo "<br>";
-
-echo "ASCII ::::::::::::::::::::::";
-$str = mb_convert_encoding($string, "ASCII", "UTF-8");
-echo $str."\n";
-echo "<br>";
-echo "ISO-8859-1 ::::::::::::::::::::::";
-$encoding = mb_detect_encoding(mb_convert_encoding($string, "ISO-8859-1", "UTF-8"));
-echo $encoding;
-echo "<br>";
-echo "Windows (ANSI) ::::::::::::::::::::::";
-$encoding = mb_detect_encoding(mb_convert_encoding($string, "UTF-7", "UTF-8"));
-echo $encoding;
-echo "<br>";
-echo "UTF16 (Encoding) ::::::::::::::::::::::";
-$encoding = mb_detect_encoding(mb_convert_encoding($string, "UTF-8","UTF-16"));
-echo $encoding;
-*/
-echo "<br>";
-
-/*
-echo "(Coding) :::::::::::TEST::::::::::: <br>";
-$encoding = iconv("ISO-8859-1", "UTF-8", $string);
-echo $encoding;
-echo "<br>";
-echo "<br>";
-echo "(Coding2) :::::::::::TEST2::::::::::: <br>";
-$encoding = iconv("UTF-8", "ASCII//TRANSLIT", $string);
-echo $encoding;
-echo "<br>";
-echo "<br>";
-
 
 Test Feeds -------------------------------------------------
 http://www.nylons-strumpfhosen-shop.de/affili.csv
@@ -172,62 +21,80 @@ https://get.cpexp.de/gU0fAzClXgFtgEuqRXNKibhslteEPXaKoz9QS-xYxmu31gzyzHnR00Csau0
 
 ----------------------------------------------------------------------------
 
-
-
-echo "UTF-8 Encoding:::::::::::::::::::::: <br>";
-echo utf8_encode($string)."\n";
-echo "<br>";
-echo "<hr>";
 */
-//-----------------------------------------------------detect Charset END
-//-----------------------------------------------------detect largest Line BEGIN
+header("Content-Type: text/event-stream");
+header("Cache-Control: no-cache");
+include('common-functions.php');
+$msg_id = 0;
+
+?>
+<div id="logStatement">
+<?php
+
+/*
+error_reporting(~0);
+ini_set('display_errors', 1);
+*/
+echo "<strong>Log:</strong><br>";
+sendMsg("Downloading...", $msg_id);
+$feedURL = $_POST["feedURL"];
+echo "Your provided url is <strong> $feedURL </strong><br>";
+
+/*
+$opts = array(
+  'http'=>array(
+    'method'=>"GET",
+    'header'=>"Accept-language: en\r\n" .
+              "Cookie: foo=bar\r\n"
+  )
+);
+*/
+$opts = array(
+  'http'=>array(
+    'method'=>"POST",
+    'header'=>
+      "Accept-language: en\r\n".
+      "Content-type: application/x-www-form-urlencoded\r\n",
+    'content'=>http_build_query(array('foo'=>'bar'))
+  )
+);
 
 
+sendMsg("reading Raw Feed Data", $msg_id);
+$context = stream_context_create($opts);
+$handle = fopen($feedURL, "r");
 
 
+//phpinfo();
+$handler = fopen($feedURL, "r");
+$tester = fgets($handler,5);
+//fclose($handler);
 
-//-----------------------------------------------------detect largest Line END
-//-----------------------------------------------------detect Delimiter BEGIN
-//echo "<h2>Test different Delimiters on provided Feed </h2>";
-//echo "<br>";
+
+sendMsg("detecting compression", $msg_id);
+$feed = detectCompression($feedURL,$tester);
+
+
+sendMsg("detecting Charset", $msg_id);
+$array = explode("\n", $feed);
+$firstLine = $array[0];
+$secondline = $array[1];
+//-----------------------------------------------------detect Charset BEGIN
+//echo "<h2>Different charset on provided Feed </h2>";
+$string = $array[0];
+echo "Autodetection Charset: " . mb_detect_encoding($string,"auto","not found") . "<br>";
+echo "<br>";
+
+
+sendMsg("detecting seperator", $msg_id);
 echo "<strong><u>First Line Feed: </u></strong><br>".strip_tags($firstLine);
 echo "<br>";
 echo "<strong><u>Second Line Feed: </u></strong><br>".strip_tags($secondline);
 echo "<br>";
-
-//echo "<br>";
-$delimiterComma = substr_count($feed,',');
-//echo "Amount of Values for Delimiter: Comma(,) : ". substr_count($feed,',') ."<br>";
-$delimiterSemicolon = substr_count($feed,';');
-//echo "Amount of Values for Delimiter: Semicolon(;) : ". substr_count($feed,';') ."<br>";
-$delimiterPipe = substr_count($feed,'|');
-//echo "Amount of Values for Delimiter: Pipe(|) : ". substr_count($feed,'|') ."<br>";
-$delimiterTab = substr_count($feed,"\t");
-//echo "Amount of Values for Delimiter: Tab (  ) : ". substr_count($feed,"\t") ."<br>";
-$topDelimiter = max($delimiterComma, $delimiterSemicolon, $delimiterPipe, $delimiterTab);
-if ($topDelimiter == $delimiterComma) {
-    echo "Suggested Delimiter: <strong>Comma</strong>";
-	$delimiter = ",";
-} elseif ($topDelimiter == $delimiterSemicolon) {
-    echo "Suggested Delimiter: <strong>Semicolon</strong>";
-	$delimiter = ";";
-} elseif ($topDelimiter == $delimiterPipe) {
-    echo "Suggested Delimiter: <strong>Pipe</strong>";
-	$delimiter = "|";
-} elseif ($topDelimiter == $delimiterTab) {
-    echo "Suggested Delimiter: <strong>Tab</strong>";
-	$delimiter = "\t";
-} else {
-    echo "not found";
-}
+$delimiter = detectDelimiter($feed);
 echo "<br>";
-//echo "<br>";
 
-
-//-----------------------------------------------------detect Delimiter END
-//echo "<hr>";
-
-//-----------------------------------------------------set feed Data into CSV Data BEGIN
+sendMsg("create Table", $msg_id);
 $csvData = $feed;
 
 $Data = str_getcsv($csvData, "\n",'"'); //parse the rows 
@@ -245,87 +112,21 @@ foreach ($lines as $line) {
     $array[] = str_getcsv($line);
 }
 //echo "<hr>";
-$teile = explode($delimiter, $feed);
-$maxTeile = sizeof($teile);
 $maxLines = sizeof($lines);
 $maxColumns = sizeof($Column);
 
-/*
-
-echo "<hr>";
-echo $maxData;
-echo $maxRow;
-echo "<h1>Data Sring Array[0][1]</h1>";
-echo "<hr>";
-print_r($Data[0][1]);
-
-echo "<hr>";
-echo $maxTeile;
-echo $maxLines;
-echo "<h1>Data Explode Array[1]</h1>";
-echo "<hr>";
-print_r($teile[1]);
-
-echo "<br>";
-echo "<hr>";
-*/
 ?>
 </div>
 <div id="providedFeedTableContainer">
-<div id="tableHeader">
-<h1> Preview Sheet <span id="greenBG">CSV</span> based on Provided URL </h1>
-<?php
-/*
-echo $teile[0]; // Teil1
-echo $teile[1]; // Teil2
-echo $teile[2]; // Teil3
-echo $teile[3]; // Teil4
-echo "<hr>";
-echo "<hr>";
-*/
-//-----------------------------------------------------set feed Data into CSV Data END
-?>
+	<div id="tableHeader">
+	<h1> Preview Sheet <span id="greenBG">CSV</span> based on Provided URL </h1>
 </div>
-<?php
 
-
-//-----------------------------------------------------set From Values BEGIN
-
-/*
-print_r ($Data2);	
-
-*/
-$count = array();  // create an empty array
-/*
-foreach($Data2 as $arr) {  
-		$key2 = array_keys($arr); 
-        $count[$key2[0]]++;
-	}
-*/	
-//$maxLines = $count[0];
-//$maxColumns = count($Data2[0]);
-
-$maxLines-=1;
-
-/*========================================================================================================removed selection due loading time
-
-for ($i = 0; $i < $maxColumns; $i++){ // need the max Number for Data2[][this] or Splitted Columns
-	echo "<select>";
-	for ($j = 0; $j < $maxLines; $j++){
-		echo "<option>".$Data2[$j][$i]."</option>"; 
-	}
-	echo "</select>";
-}
-
-
-*/
-
-//-----------------------------------------------------set From Values end
-
-?>
 
 <table id="FeedTable" class="display" cellspacing="0" width="100%">
 <?php
+$count = array();  // create an empty array
+$maxLines-=1;
 //-----------------------------------------------------set Table BEGIN
 
 $loopcount = 0;
@@ -362,28 +163,6 @@ $loopcount = 0;
 	
 }
 
-
-
-
-
-//------------------Testing Purpuses-----------------------------------set Table BEGIN
-/*$i=0;
-
-	while($i< $maxLines){
-		echo  $lines[$i]."<br>".PHP_EOL;
-		$i++;
-	}
-
-foreach ($line as $line){
-	echo "<tr>";
-	foreach ($line as $teile){
-		echo "<td>$teile</td>";
-	}
-	echo "</tr>
-}
-
-*/
-//-----------------------------------------------------set Table END
 
 ?>
 </table>

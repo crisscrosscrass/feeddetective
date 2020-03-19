@@ -1,0 +1,198 @@
+/*
+################################################################################################################
+              basic page settings
+################################################################################################################
+*/
+body{
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	font-family: "Open Sans";
+	}
+form{
+	margin-bottom: 0em;
+	margin-top: 0em;
+	margin-right: 0em;
+	}
+	.red{
+		color: red;
+	}
+	.green{
+		color: green;
+	}
+h6{
+	padding:0;
+	margin:5px;
+}
+/*
+################################################################################################################
+*
+*
+*
+*
+*              table design settings example feed csv ftp://ftp-11577-147765031:15903304@ftp.semtrack.de/ladenzeile_de.csv
+*
+*
+*
+################################################################################################################
+*/
+#tableHeader h1{
+	margin: 0px;
+	padding: 0px;
+	color: white;
+	background-color: black;
+}
+#greenBG{
+	background-color: #9fbe3c;
+}
+
+#contents{
+	position: relative;
+	margin-left: 5%;
+	margin-top: 50px;
+	width: 90%;
+	z-index: 2;
+}
+#contents2{
+	position: relative;
+	margin-left: 5%;
+	margin-top: 50px;
+	width: 90%;
+	z-index: 2;
+}
+#FeedTable{
+	position: relative;
+	overflow: auto;
+	z-index: 2;
+}
+.empty {
+	position: relative;
+	border-color: rgba(0,0,0,0);
+	width: 800px;
+	height: 300px;
+	border: 5px;
+}
+.empty2 {
+	position: relative;
+	border-color: rgba(0,0,0,0);
+	width: 800px;
+	height: 50px;
+	border: 5px;
+}
+.ui-resizable-disabled .ui-resizable-handle,
+.ui-resizable-autohide .ui-resizable-handle {
+    display: none;
+}
+/*
+################################################################################################################
+              feed table settings
+################################################################################################################
+*/
+table#FeedTable,table#FeedTable th,table#FeedTable td{
+	border: 1px solid black;
+	border-collapse: collapse;
+	vertical-align: middle;
+	}
+
+table#FeedTable th,table#FeedTable td{
+	padding: 5px;
+	}
+table#FeedTable td {
+  display: table-cell;
+  vertical-align: inherit;
+  text-align: inherit; 
+  padding: 1px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: 13px;
+}
+
+table#FeedTable th{
+	background-color: rgba(40,158,162,1);
+	color: white;
+
+	}
+table#FeedTable tr:first-child{
+	
+	}
+table#FeedTable tr:nth-child(even){
+	background-color: rgba(40,158,162,.3);
+	}
+table#FeedTable tr:nth-child(odd){
+	background-color: rgba(40,158,162,.6);
+	}
+table#FeedTable tr:hover {
+          background-color: rgba(232, 48, 98,1);
+		  color: white;
+        }
+div select{
+	width: 150px;
+	}
+/*
+################################################################################################################
+              TableWindow table settings
+################################################################################################################
+*/
+table#TableWindow{
+	font-family: "Open Sans", Georgia, Serif;
+}
+table#TableWindow,table#TableWindow th,table#TableWindow td{
+	border: 1px solid black;
+	border-collapse: collapse;
+	vertical-align: middle;
+	}
+table#TableWindow th{
+	background-color: rgba(219,219,219,1);
+	color: black;
+	text-align: center;
+	font-size: 0.8em;
+	padding: auto;
+	}
+table#TableWindow td{
+	text-align: center;
+    vertical-align: middle;
+	font-size: 0.8em;
+	padding: auto;
+	}
+table#TableWindow td.found{
+	background-color: rgba(217,234,211,1);
+	color: black;
+	}
+table#TableWindow td.missing{
+	background-color: rgba(255,107,107,0.5);
+	color: black;
+	}
+table#TableWindow td.missinghalf{
+	background-color: rgba(255,214,214,1);
+	color: black;
+	}
+table#TableWindow td.data{
+	background-color: rgba(255,255,255,1);
+	color: black;
+	}
+/*
+################################################################################################################
+              header settings
+################################################################################################################
+*/
+.containerheader{
+	position: relative;
+	margin: 0px;
+	overflow: hidden;
+	z-index: 10;
+	}
+.header{
+	position: relative;
+	width: 100%;
+	height: 150px;
+	background-color: rgba(40,158,162,1);
+	transform: translate(0px,-20px) rotate(2deg) scale(1.3,1.3);
+	}
+#logoholder img {
+	position: absolute;
+	width: 350px;
+	heigth: 350px;
+	top: 20px;
+	right:0;
+	transform: translate(0px,-60px);
+	}

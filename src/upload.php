@@ -1,30 +1,31 @@
-<html>
-<head>
-<link rel="stylesheet" type="text/css" href="CCC.css">
-</head>
-<body>
-<br>
 <?php
+/*
+error_reporting(~0);
+ini_set('display_errors', 1);
+*/
+header("Content-Type: text/event-stream");
+header("Cache-Control: no-cache");
+
+include('common-functions.php');
+$msg_id = 0;
+
 echo "<strong>Log:</strong><br>";
-//echo "<h2>Successfully Uploaded</h2>";
+sendMsg("Uploading...", $msg_id);
 
 
 $file = $_FILES['file']['tmp_name'];
 $fileName = $_FILES['file']['name'];
 $fileType = $_FILES['file']['type'];
 $fileError = $_FILES['file']['error'];
-$context = stream_context_create();
-$feed = file_get_contents($_FILES['file']['tmp_name'], true);
-if ($feed === FALSE) {
-   die("Error reading file $filename");
-}
+
+
 echo "Filename: ";
 print_r($fileName);
 echo "<br>";
 
-?>
-<div id="logStatement">
-<?php
+
+// ===========================================================
+echo '<div id="logStatement">';
 //phpinfo();
 echo "Filelocation: ";
 print_r($file);
@@ -33,6 +34,41 @@ echo "Filetype: ";
 print_r($fileType);
 echo "<br>";
 
+
+
+//function to get the remote data
+
+
+$uploadUrl = $_SERVER['REQUEST_URI'].$file."/".$fileName.'<br/>';
+echo '<p><font color="#ff0000" size="4">'.$uploadUrl.'</font></p>';
+
+$post = array(
+	'extra_info' => '123456',
+	'file_contents' => file_get_contents($_FILES['file']['tmp_name'])
+);
+
+
+
+//print_r($post['file_contents']);
+//print_r("<br/>");
+$feed = $post['file_contents'];
+
+// ============================================================
+sendMsg("reading Raw Content Data", $msg_id);
+
+/*
+$context = stream_context_create();
+$feed = file_get_contents($_FILES['file']['tmp_name'], false, $context);
+
+if ($feed === FALSE) {
+   die("Error reading file $filename");
+}
+*/
+
+
+
+
+sendMsg("detecting compression", $msg_id);
 
 $handle = fopen($_FILES['file']['tmp_name'], "r");
 $tester = fgets($handle,5);
@@ -72,40 +108,14 @@ $array = explode("\n", $feed);
 $firstLine = $array[0];
 $secondline = $array[1];
 //-----------------------------------------------------detect Charset BEGIN
+sendMsg("detecting Charset", $msg_id);
+
+
+
 //echo "<h2>Different charset on provided Feed </h2>";
 $string = $firstLine;
 echo "Autodetection Charset: " . mb_detect_encoding($string,"auto","not found") . "<br>";
 /*
-echo $string."\n";
-echo "<br>";
-echo "ASCII ::::::::::::::::::::::";
-$str = mb_convert_encoding($string, "ASCII", "UTF-8");
-echo $str."\n";
-echo "<br>";
-echo "ISO-8859-1 ::::::::::::::::::::::";
-$encoding = mb_detect_encoding(mb_convert_encoding($string, "ISO-8859-1", "UTF-8"));
-echo $encoding;
-echo "<br>";
-echo "Windows (ANSI) ::::::::::::::::::::::";
-$encoding = mb_detect_encoding(mb_convert_encoding($string, "WINDOWS-1255", "UTF-8"));
-echo $encoding;
-echo "<br>";
-echo "UTF16 (Encoding) ::::::::::::::::::::::";
-$encoding = mb_detect_encoding(mb_convert_encoding($string, "UTF-8","UTF-16"));
-echo $encoding;
-echo "<br>";
-
-echo "(Coding) :::::::::::TEST::::::::::: <br>";
-$encoding = iconv("ISO-8859-1", "UTF-8", $string);
-echo $encoding;
-echo "<br>";
-echo "<br>";
-echo "(Coding2) :::::::::::TEST2::::::::::: <br>";
-$encoding = iconv("UTF-8", "ASCII//TRANSLIT", $string);
-echo $encoding;
-echo "<br>";
-echo "<br>";
-
 
 Test Feeds -------------------------------------------------
 http://raw.githubusercontent.com/okfn/datapipes/master/test/data/gla.csv
@@ -125,8 +135,6 @@ https://get.cpexp.de/gU0fAzClXgFtgEuqRXNKibhslteEPXaKoz9QS-xYxmu31gzyzHnR00Csau0
 
 ----------------------------------------------------------------------------
 
-
-
 echo "UTF-8 Encoding:::::::::::::::::::::: <br>";
 echo utf8_encode($string)."\n";
 echo "<br>";
@@ -134,18 +142,8 @@ echo "<hr>";
 */
 
 
+sendMsg("detecting seperator", $msg_id);
 
-//-----------------------------------------------------detect Charset END
-//-----------------------------------------------------detect largest Line BEGIN
-
-
-
-
-
-//-----------------------------------------------------detect largest Line END
-//-----------------------------------------------------detect Delimiter BEGIN
-//echo "<h2>Test different Delimiters on provided Feed </h2>";
-//echo "<br>";
 echo "<strong><u>First Line Feed: </u></strong><br>".strip_tags($firstLine);
 echo "<br>";
 echo "<strong><u>Second Line Feed: </u></strong><br>".strip_tags($secondline);
@@ -163,7 +161,7 @@ $delimiterTab = substr_count($feed,"\t");
 //echo "Amount of Values for Delimiter: Tab (  ) : ". substr_count($feed,"\t") ."<br>";
 $topDelimiter = max($delimiterComma, $delimiterSemicolon, $delimiterPipe, $delimiterTab);
 if ($topDelimiter == $delimiterComma) {
-    echo "Suggested Delimiter: <strong>Comma</strong>";
+	echo "Suggested Delimiter: <strong>Comma</strong>";
 	$delimiter = ",";
 } elseif ($topDelimiter == $delimiterSemicolon) {
     echo "Suggested Delimiter: <strong>Semicolon</strong>";
@@ -185,10 +183,19 @@ if ($topDelimiter == $delimiterComma) {
 //echo "<hr>";
 
 //-----------------------------------------------------set feed Data into CSV Data BEGIN
+
+sendMsg("create Table", $msg_id);
+
 $csvData = $feed;
 
-$Data = str_getcsv($csvData, PHP_EOL,'"'); //parse the rows 
+// str_getcsv ( string $input [, string $delimiter = "," [, string $enclosure = '"' [, string $escape = "\\" ]]] ) : array
+$Data = str_getcsv($csvData, PHP_EOL);
+//$Data = str_getcsv($csvData, PHP_EOL,'"'); //parse the rows 
+
+
+
 foreach($Data as &$Row) $Row = str_getcsv($Row, $delimiter); //parse the items in rows
+
 $maxData = sizeof($Data);
 $maxRow = sizeof($Row);
 
@@ -337,8 +344,6 @@ foreach ($line as $line){
 ?>
 </table>
 </div>
-</body>
-</html>
 
 
 
