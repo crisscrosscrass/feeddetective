@@ -62,7 +62,7 @@
         </div>
 
         <div class="buttonwrapper">
-            <div class="button" id="crossSign" onclick="OpenCloseMainMenu()">
+            <div class="button" id="crossSign">
                 <div class="buttonbackground"><img src="mainmenu.svg" class="bar1"></div>
             </div>
         </div>
@@ -225,7 +225,7 @@
                                 <p class="leftFeed">display</p>
                                 <p class="middleFeed">feed table</p>
                             </div>
-                            <div id="mapping" value="mapping" onclick="MappingOpen()" class="buttonContainerMapping">
+                            <div id="mapping" value="mapping" class="buttonContainerMapping">
                                 <p class="right"><span class="tooltip">&#9432;<span class="tooltiptext">adjust feed attribute mapping manually for Feed Analysis (resets feedback builder form)</span></span>
                                 </p>
                                 <p class="leftFeed">attribute</p>

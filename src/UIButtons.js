@@ -7,7 +7,7 @@ $(document).ajaxStart(function () {
 $(document).ajaxStop(function () {
     $('#loading2').show();
     $(document).ready(function () {
-        OpenCloseMainMenu();
+        program.OpenCloseMainMenu();
         // ValidatePreview();
         new ValidateAndPreview(maxSamples);
         $('#loading2').hide();
@@ -36,7 +36,7 @@ function dynamicAjax(phpFile, data, callback) {
             timeout: 120000
         });
     } else {
-        OpenCloseMainMenu();
+        program.OpenCloseMainMenu();
         INTERRUPTED(1);
     }
 }
@@ -167,7 +167,6 @@ class UploadXML {
 }
 class FeedPreview {
     constructor() {
-        OpenCloseMainMenu();
         var tableLength = document.getElementById('FeedTable').rows[0].cells.length;
         var maxLines = document.getElementById('FeedTable').rows.length;
         var value = document.getElementById('FeedTable').rows[0].innerHTML;
@@ -218,7 +217,6 @@ class FeedPreview {
 }
 class DisplayFeedTableViaPopUp {
     constructor() {
-        OpenCloseMainMenu();
         var HeaderAmount = document.getElementById("FeedTable").rows[0].cells.length;
         var tableLines = document.getElementById('FeedTable').rows.length;
         var TableWindow = document.createElement("TABLE");
@@ -278,30 +276,107 @@ class DisplayFeedTableViaPopUp {
         docTable.close();
     }
 }
-class UserActions{
-    constructor(){
+class AttributeMapping {
+    constructor() {
+        document.getElementById("MappingSelection").innerHTML = "<h6>Mapping Setting </h6>"
+        var HeaderAmount = document.getElementById("FeedTable").rows[0].cells.length;
+        if (HeaderAmount > 100) {
+            HeaderAmount = 100;
+        }
+        for (var i = 0; i < HeaderAmount; i++) {
+            var HeaderValues = document.getElementById("FeedTable").rows[0].cells[i].innerHTML;
+            HeaderArray.push(HeaderValues);
+        }
+        for (var i = 0; i < allNames.length; i++) {
+            document.getElementById("MappingSelection").innerHTML += allNames[i];
+            var alpha = document.createElement("SELECT");
+            alpha.setAttribute("id", allNames[i]);
+            //document.getElementById("MappingSelection").innerHTML += alpha;
+            document.getElementById("MappingSelection").appendChild(alpha);
+            for (var j = 0; j <= HeaderAmount; j++) {
+                var beta = document.createElement("option");
+                beta.setAttribute("id", j);
+                beta.value = j;
+                beta.innerHTML = HeaderArray[j];
+                alpha.appendChild(beta);
+            }
+            beta.setAttribute("id", "nothing");
+            beta.value = "nothing";
+            beta.innerHTML = "no Validation";
+            alpha.appendChild(beta);
+            document.getElementById("MappingSelection").innerHTML += "<br>";
+        }
+        var button = document.createElement("BUTTON");
+        button.setAttribute("id", "MappingValidate");
+        button.value = "Validate";
+        button.innerHTML = "Validate";
+        button.setAttribute('onclick', 'MappingValidate();');
+        document.getElementById("MappingSelection").appendChild(button);
+        document.getElementById("MappingSelection").innerHTML += "<br>";
+        var button2 = document.createElement("BUTTON");
+        button2.setAttribute("id", "MappingClose");
+        button2.value = "Close";
+        button2.innerHTML = "Close";
+        button2.setAttribute('onclick', 'MappingClose();');
+        document.getElementById("MappingSelection").appendChild(button2);
+        document.getElementById("MappingSelection").innerHTML += "<br>";
+        document.getElementById("MappingSelection").innerHTML += "&#35; Samples:";
+        var InputNumberField = document.createElement("INPUT");
+        InputNumberField.setAttribute("id", "InputNumberField");
+        InputNumberField.setAttribute("type", "number");
+        InputNumberField.setAttribute("min", 1);
+        InputNumberField.setAttribute("max", 50);
+        InputNumberField.value = maxSamples;
+        document.getElementById("MappingSelection").appendChild(InputNumberField);
+        for (var q = 0; q < allNames.length; q++) {
+            if (MappingArray[q] != undefined) {
+                document.getElementById(allNames[q]).selectedIndex = MappingArray[q];
+            } else {
+                var setNoValidation = HeaderAmount;
+                document.getElementById(allNames[q]).selectedIndex = setNoValidation;
+            }
+        }
     }
-    OpenXMLSettings(){
+}
+class UserActions {
+    constructor() {
+    }
+    OpenCloseMainMenu() {
+        $("#my_inputs").fadeOut("slow");
+        $("#my_inputs2").fadeOut("slow");
+        $("#my_inputs3").fadeOut("slow");
+        var crossSign = document.querySelector("#crossSign");
+        crossSign.classList.toggle("change");
+        if ($('.backgroundmenu').hasClass('change')) {
+            $(".containermenu").fadeOut("fast");
+            $('.backgroundmenu').fadeOut("fast");
+            $('.backgroundmenu').removeClass('change');
+        } else {
+            $('.backgroundmenu').fadeIn("fast");
+            $(".containermenu").fadeIn("fast");
+            $('.backgroundmenu').addClass('change');
+        }
+    }
+    OpenXMLSettings() {
         $("#my_inputs2").fadeOut();
         $("#my_inputs3").fadeOut();
         $("#my_inputs").slideToggle("slow");
     }
-    OpenCSVSettings(){
+    OpenCSVSettings() {
         $("#my_inputs").fadeOut();
         $("#my_inputs3").fadeOut();
         $("#my_inputs2").slideToggle("slow");
     }
-    OpenUploadFeedSettings(){
+    OpenUploadFeedSettings() {
         $("#my_inputs2").fadeOut();
         $("#my_inputs").fadeOut();
         $("#my_inputs3").slideToggle("slow");
     }
-    OpenFeedbackBuilder(){
-        OpenCloseMainMenu();
+    OpenFeedbackBuilder() {
         $(".modal").fadeIn();
         $(".modal_main").show();
     }
-    CloseFeedbackBuilder(){
+    CloseFeedbackBuilder() {
         $(".response").fadeOut();
         $(".responseBox").fadeOut();
         $(".modal").fadeOut();
@@ -383,3 +458,4 @@ class UserActions{
         $("#selectDeepURL").val("yes");
     }
 }
+const program = new UserActions();

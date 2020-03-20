@@ -144,11 +144,22 @@ $(document).ready(function () {
             new UploadXML(e,data)
         }
     }));
+    $('#crossSign').click(function () {
+        userActions.OpenCloseMainMenu();
+    });
     $('#hidePreview').click(function () {
+        userActions.OpenCloseMainMenu();
         new FeedPreview();
     });
     $('#PopUpTable').click(function () {
+        userActions.OpenCloseMainMenu();
         new DisplayFeedTableViaPopUp();
+    });
+    $('#mapping').click(function () {
+        userActions.OpenCloseMainMenu();
+        new DisplayFeedTableViaPopUp();
+        new AttributeMapping();
+        $("#MappingWrapper").toggle();
     });
     $('#callCostum').click(function () {
         userActions.OpenXMLSettings();
@@ -160,6 +171,7 @@ $(document).ready(function () {
         userActions.OpenUploadFeedSettings();
     });
     $('#callModal').click(function () {
+        userActions.OpenCloseMainMenu();
         userActions.OpenFeedbackBuilder();
         checkedKey = true;
     });
@@ -199,22 +211,6 @@ $(document).ready(function () {
         }
     }
 });
-function OpenCloseMainMenu() {
-    $("#my_inputs").fadeOut("slow");
-    $("#my_inputs2").fadeOut("slow");
-    $("#my_inputs3").fadeOut("slow");
-    var crossSign = document.querySelector("#crossSign");
-    crossSign.classList.toggle("change");
-    if ($('.backgroundmenu').hasClass('change')) {
-        $(".containermenu").fadeOut("fast");
-        $('.backgroundmenu').fadeOut("fast");
-        $('.backgroundmenu').removeClass('change');
-    } else {
-        $('.backgroundmenu').fadeIn("fast");
-        $(".containermenu").fadeIn("fast");
-        $('.backgroundmenu').addClass('change');
-    }
-}
 function toolSign() {
     var toolSign = document.querySelector("#toolSign");
     toolSign.classList.toggle("change");
@@ -250,9 +246,7 @@ function openPopUp() {
 ==============================================================================================================================*/
 // Set Mapping Data to evalute Table by Hand
 function MappingOpen() {
-    setMapping();
-    OpenCloseMainMenu();
-    $("#MappingWrapper").toggle();
+    
 }
 function MappingClose() {
     $("#MappingWrapper").toggle();
@@ -297,65 +291,7 @@ function MappingValidate() {
     validateNew = false;
 }
 function setMapping() {
-    document.getElementById("MappingSelection").innerHTML = "<h6>Mapping Setting </h6>"
-    var HeaderAmount = document.getElementById("FeedTable").rows[0].cells.length;
-    var HeaderCheck = HeaderAmount - 1;
-    if(HeaderAmount > 100 ){
-        HeaderAmount = 100;
-    }
-    for (var i = 0; i < HeaderAmount; i++) {
-        var HeaderValues = document.getElementById("FeedTable").rows[0].cells[i].innerHTML;
-        HeaderArray.push(HeaderValues);
-    }
-    for (var i = 0; i < allNames.length; i++) {
-        document.getElementById("MappingSelection").innerHTML += allNames[i];
-        var alpha = document.createElement("SELECT");
-        alpha.setAttribute("id", allNames[i]);
-        //document.getElementById("MappingSelection").innerHTML += alpha;
-        document.getElementById("MappingSelection").appendChild(alpha);
-        for (var j = 0; j <= HeaderAmount; j++) {
-            var beta = document.createElement("option");
-            beta.setAttribute("id", j);
-            beta.value = j;
-            beta.innerHTML = HeaderArray[j];
-            alpha.appendChild(beta);
-        }
-        beta.setAttribute("id", "nothing");
-        beta.value = "nothing";
-        beta.innerHTML = "no Validation";
-        alpha.appendChild(beta);
-        document.getElementById("MappingSelection").innerHTML += "<br>";
-    }
-    var button = document.createElement("BUTTON");
-    button.setAttribute("id", "MappingValidate");
-    button.value = "Validate";
-    button.innerHTML = "Validate";
-    button.setAttribute('onclick', 'MappingValidate();');
-    document.getElementById("MappingSelection").appendChild(button);
-    document.getElementById("MappingSelection").innerHTML += "<br>";
-    var button2 = document.createElement("BUTTON");
-    button2.setAttribute("id", "MappingClose");
-    button2.value = "Close";
-    button2.innerHTML = "Close";
-    button2.setAttribute('onclick', 'MappingClose();');
-    document.getElementById("MappingSelection").appendChild(button2);
-    document.getElementById("MappingSelection").innerHTML += "<br>";
-    document.getElementById("MappingSelection").innerHTML += "&#35; Samples:";
-    var InputNumberField = document.createElement("INPUT");
-    InputNumberField.setAttribute("id", "InputNumberField");
-    InputNumberField.setAttribute("type", "number");
-    InputNumberField.setAttribute("min", 1);
-    InputNumberField.setAttribute("max", 50);
-    InputNumberField.value = maxSamples;
-    document.getElementById("MappingSelection").appendChild(InputNumberField);
-    for (var q = 0; q < allNames.length; q++) {
-        if (MappingArray[q] != undefined) {
-            document.getElementById(allNames[q]).selectedIndex = MappingArray[q];
-        } else {
-            var setNoValidation = HeaderAmount;
-            document.getElementById(allNames[q]).selectedIndex = setNoValidation;
-        }
-    }
+    
 }
 // hiding content part 
 $(document).ready(function () {
@@ -412,7 +348,7 @@ $(document).ready(function () {
     $("#contents").slideToggle("slow");
     $("#quicklinkswrapper").css('display', 'flex').fadeOut(1);
     $(".ui-resizable-handle").slideToggle("slow");
-    OpenCloseMainMenu();
+    userActions.OpenCloseMainMenu();
 });
 
 /*================================================================================

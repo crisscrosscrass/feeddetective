@@ -53,7 +53,6 @@ class ValidateAndPreview {
         if(this.table != undefined && this.table != null){
             this.validationTableWindow(this.tableLines, this.arrFalse);
             this.removeAndReplaceAmperSigns();
-            setMapping();
         }
         if (this.tableLines < 5) {
             INTERRUPTED(3);
