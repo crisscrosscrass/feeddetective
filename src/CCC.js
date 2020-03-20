@@ -1,3 +1,4 @@
+const userActions = new UserActions();
 var table;
 var checkingState = false;
 let waitingStatement = 0;
@@ -61,7 +62,7 @@ function FIXEDINTERRUPTED() {
 function clearAllArrays() {
     document.getElementById('dynamicLoadingContent').innerHTML = "";
     checkingState = false;
-    resetTemplate();
+    userActions.resetTemplate();
     FIXEDINTERRUPTED();
     MappingArray = [];
     HeaderArray = [];
@@ -115,143 +116,6 @@ function getWaitingInfo(value) {
     }
     return (selection[value] || selection['default']);
 }
-function resetTemplate() {
-    //==========================================================first column
-    $('input[id="encodingfeed"]').prop('checked', false);
-    $('input[id="feedstructure"]').prop('checked', false);
-    $('input[id="articlenumber"]').prop('checked', false);
-    $('input[id="productname"]').prop('checked', false);
-    $('input[id="maincategory"]').prop('checked', false);
-    $('input[id="subcategory"]').prop('checked', false);
-    $('input[id="2ndsubcategory"]').prop('checked', false);
-    $('input[id="gender"]').prop('checked', false);
-    $('input[id="color"]').prop('checked', false);
-    $('input[id="brand"]').prop('checked', false);
-    $('input[id="material"]').prop('checked', false);
-    $('input[id="description"]').prop('checked', false);
-    $('input[id="price"]').prop('checked', false);
-    $('input[id="oldprice"]').prop('checked', false);
-    $('input[id="pricesStartFrom"]').prop('checked', false);
-    $('input[id="energylabel"]').prop('checked', false);
-    $('input[id="pricePerUnit"]').prop('checked', false);
-    $('input[id="shippingcosts"]').prop('checked', false);
-    $('input[id="shippingtime"]').prop('checked', false);
-    $('input[id="size"]').prop('checked', false);
-    $('input[id="filters"]').prop('checked', false);
-    $('input[id="ImageURL"]').prop('checked', false);
-    $('input[id="AuxImageURL"]').prop('checked', false);
-    $('input[id="DeepURL"]').prop('checked', false);
-    //==========================================================second column 
-    $('input[class="encoding"]').prop('checked', false);
-    $('input[class="feedstructure"]').prop('checked', false);
-    $('input[class="articlenumber"]').prop('checked', false);
-    $('input[class="productname"]').prop('checked', false);
-    $('input[class="maincategory"]').prop('checked', false);
-    $('input[class="subcategory"]').prop('checked', false);
-    $('input[class="2ndsubcategory"]').prop('checked', false);
-    $('input[class="gender"]').prop('checked', false);
-    $('input[class="color"]').prop('checked', false);
-    $('input[class="brand"]').prop('checked', false);
-    $('input[class="material"]').prop('checked', false);
-    $('input[class="description"]').prop('checked', false);
-    $('input[class="price"]').prop('checked', false);
-    $('input[class="oldprice"]').prop('checked', false);
-    $('input[class="pricesStartFrom"]').prop('checked', false);
-    $('input[class="energylabel"]').prop('checked', false);
-    $('input[class="pricePerUnit"]').prop('checked', false);
-    $('input[class="shippingcosts"]').prop('checked', false);
-    $('input[class="shippingtime"]').prop('checked', false);
-    $('input[class="size"]').prop('checked', false);
-    $('input[class="filters"]').prop('checked', false);
-    $('input[class="ImageURL"]').prop('checked', false);
-    $('input[class="AuxImageURL"]').prop('checked', false);
-    $('input[class="DeepURL"]').prop('checked', false);
-    //==========================================================third column
-    $("#selectArticlenumber").val("yes");
-    $("#selectProductname").val("yes");
-    $("#selectMaincategory").val("yes");
-    $("#selectSubcategory").val("yes");
-    $("#select2ndsubcategory").val("yes");
-    $("#selectGender").val("yes");
-    $("#selectColor").val("yes");
-    $("#selectBrand").val("yes");
-    $("#selectMaterial").val("yes");
-    $("#selectDescription").val("yes");
-    $("#selectPrice").val("yes");
-    $("#selectOldprice").val("yes");
-    $("#selectPricesStartFrom").val("yes");
-    $("#selectEnergylabel").val("yes");
-    $("#selectPricePerUnit").val("yes");
-    $("#selectShippingcosts").val("yes");
-    $("#selectShippingtime").val("yes");
-    $("#selectSize").val("yes");
-    $("#selectFilters").val("yes");
-    $("#selectImageURL").val("yes");
-    $("#selectAuxImageURL").val("yes");
-    $("#selectDeepURL").val("yes");
-}
-// functions before/after Ajax Call
-$(document).ajaxStart(function () {
-    $('#loading').show();
-}).ajaxStop(function () {
-    $('#loading').hide();
-});
-$(document).ajaxStop(function () {
-    $('#loading2').show();
-    $(document).ready(function () {
-        OpenCloseMainMenu();
-        // ValidatePreview();
-        new ValidateAndPreview(maxSamples);
-        setMapping();
-        $('#loading2').hide();
-    });
-});
-function dynamicAjax(phpFile, data, callback) {
-    let urlRegex = /\b(?:(?:https?|ftp|file):\/\/\/?|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/;
-    if (data.feedURL.length != 0 || data.feedURL.match(urlRegex)) {
-        $.ajax({
-            type: "POST",
-            url: phpFile,
-            asynch: true,
-            data: data,
-            beforeSend: function () {
-                serverStateInfo(phpFile);
-            },
-            success: callback,
-            complete: function () {
-                source.close();
-            },
-            error: function () {
-                // will fire when timeout is reached
-                $("#contents").html("<h1>connection to the server failed!!</h1>");
-                source.close();
-            },
-            timeout: 120000
-        });
-    } else {
-        OpenCloseMainMenu();
-        INTERRUPTED(1);
-    }
-}
-function serverStateInfo(phpFile) {
-    source = new EventSource(phpFile);
-    if (typeof (EventSource) !== "undefined") {
-        source.onmessage = function (event) {
-            if (checkingState == false) {
-                document.getElementById('dynamicLoadingContent').innerHTML = event.data;
-                // console.log(document.getElementById('dynamicLoadingContent').innerHTML);
-                if (document.getElementById('dynamicLoadingContent').innerHTML == "create Table") {
-                    checkingState = true;
-                }
-            } else {
-                document.getElementById('dynamicLoadingContent').innerHTML = getWaitingInfo(waitingStatement);
-                waitingStatement++;
-            }
-        };
-    } else {
-        alert("nono");
-    }
-}
 // Add Eventlistener
 $(document).ready(function () {
     // make stuff draggable
@@ -259,7 +123,6 @@ $(document).ready(function () {
     $(".modal_main").draggable();
 
     // buttons
-    let userActions = new UserActions();
     $('#submit1').click(function (e) {
         new AnalyzeCSV(e);
     });
@@ -406,7 +269,7 @@ function MappingValidate() {
     setTimeout(function () {
         $(document).ready(function () {
             //document.getElementById("outputMapping").innerHTML += "new check";
-            resetTemplate();
+            userActions.resetTemplate();
             //============================================================encoding feed structure = flawless
             $('input[id="encodingfeed"]').prop('checked', true);
             $("input[class=encoding][value='flawless']").prop("checked", true);

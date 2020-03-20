@@ -12,8 +12,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="CCC.js?v=<?php echo filemtime('CCC.js') ?>"></script>
     <script type="text/javascript" src="UIButtons.js?v=<?php echo filemtime('UIButtons.js') ?>"></script>
+    <script type="text/javascript" src="CCC.js?v=<?php echo filemtime('CCC.js') ?>"></script>
     <script type="text/javascript" src="ValidateAndPreview.js?v=<?php echo filemtime('ValidateAndPreview.js') ?>"></script>
     <script type="text/javascript" src="SampleItems.js?v=<?php echo filemtime('SampleItems.js') ?>"></script>
     <script type="text/javascript" src="generateSuggestions.js?v=<?php echo filemtime('generateSuggestions.js') ?>"></script>

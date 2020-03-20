@@ -41,7 +41,6 @@ class ValidateAndPreview {
         this.table = document.getElementById('FeedTable');
         // global config
         this.maxSamples = maxSamples;
-
         this.Init();
     }
     Init() {
@@ -51,8 +50,14 @@ class ValidateAndPreview {
             this.validateTable(allNames[i], this.allAliases[i], this.table, this.tableLines);
         }
         this.preSelectionTemplateCol2False(this.arrFalse);
-        this.validationTableWindow(this.tableLines, this.arrFalse);
-        this.removeAndReplaceAmperSigns();
+        if(this.table != undefined && this.table != null){
+            this.validationTableWindow(this.tableLines, this.arrFalse);
+            this.removeAndReplaceAmperSigns();
+            setMapping();
+        }
+        if (this.tableLines < 5) {
+            INTERRUPTED(3);
+        }
     }
     tableHeadertoLowerCase(table, maxtableColumns) {
         for (let i = 0; i < maxtableColumns; i++) {
@@ -1515,9 +1520,7 @@ class ValidateAndPreview {
 
         //writelocation.innerHTML += '<br>';
         //<br><h2><strong>Feed preview</strong></h2>
-        if (tableLines < 5) {
-            INTERRUPTED(3);
-        }
+        
     }
     removeAndReplaceAmperSigns() {
         $(".removeAmp").attr('href', function (i, value) {
