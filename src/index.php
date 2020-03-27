@@ -7,7 +7,7 @@
     <meta name="author" content="Christopher Eckardt">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base target="_top">
-    <link rel="shortcut icon" href="http://crisscrosscrass.epizy.com/feed.png">
+    <link rel="shortcut icon" href="feed.png">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
@@ -18,6 +18,8 @@
     <script type="text/javascript" src="SampleItems.js?v=<?php echo filemtime('SampleItems.js') ?>"></script>
     <script type="text/javascript" src="generateSuggestions.js?v=<?php echo filemtime('generateSuggestions.js') ?>"></script>
     <script type="text/javascript" src="reply.js"></script>
+    <script type="text/javascript" src="replyImportant.js?v=<?php echo filemtime('replyImportant.js') ?>"></script>
+    <script type="text/javascript" src="replySuggestions.js?v=<?php echo filemtime('replySuggestions.js') ?>"></script>
     <script type="text/javascript" src="clusterize.js"></script>
     <link rel="stylesheet" type="text/css" href="CCC.css?v=<?php echo filemtime('CCC.css') ?>" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
@@ -654,7 +656,7 @@
                                             <div class="col3">
                                                 <select id="selectMaincategory">
                                                     <option>yes</option>
-                                                    <option>new home snippet</option>
+                                                    <option>homenew</option>
                                                     <option>no</option>
                                                     <option>partially</option>
                                                     <option>inaccurate</option>
@@ -679,7 +681,7 @@
                                             <div class="col3">
                                                 <select id="selectSubcategory">
                                                     <option>yes</option>
-                                                    <option>new home snippet</option>
+                                                    <option>homenew</option>
                                                     <option>no</option>
                                                     <option>partially</option>
                                                     <option>inaccurate</option>
@@ -694,18 +696,18 @@
                                     <form>
                                         <td>
                                             <div class="col1">
-                                                <input type="radio" id="2ndsubcategorybuilder" checked>2nd sub category</div>
+                                                <input type="radio" id="secondsubcategorybuilder" checked>2nd sub category</div>
                                         </td>
                                         <td>
                                             <div class="col2">
-                                                <input type="radio" name="2ndsubcategory" value="yes" class="2ndsubcategory">yes
-                                                <input type="radio" name="2ndsubcategory" value="no" class="2ndsubcategory">no</div>
+                                                <input type="radio" name="2ndsubcategory" value="yes" class="secondsubcategory">yes
+                                                <input type="radio" name="2ndsubcategory" value="no" class="secondsubcategory">no</div>
                                         </td>
                                         <td>
                                             <div class="col3">
-                                                <select id="select2ndsubcategory">
+                                                <select id="selectSecondsubcategory">
                                                     <option>yes</option>
-                                                    <option>new home snippet</option>
+                                                    <option>homenew</option>
                                                     <option>no</option>
                                                     <option>partially</option>
                                                     <option>inaccurate</option>
@@ -758,7 +760,7 @@
                                             <div class="col3">
                                                 <select id="selectColor">
                                                     <option>yes</option>
-                                                    <option>new home snippet</option>
+                                                    <option>homenew</option>
                                                     <option>no</option>
                                                     <option>partially</option>
                                                     <option>inaccurate</option>
@@ -783,7 +785,7 @@
                                             <div class="col3">
                                                 <select id="selectBrand">
                                                     <option>yes</option>
-                                                    <option>new home snippet</option>
+                                                    <option>homenew</option>
                                                     <option>no</option>
                                                     <option>partially</option>
                                                 </select>
@@ -807,7 +809,7 @@
                                             <div class="col3">
                                                 <select id="selectMaterial">
                                                     <option>yes</option>
-                                                    <option>new home snippet</option>
+                                                    <option>homenew</option>
                                                     <option>no</option>
                                                     <option>partially</option>
                                                     <option>inaccurate</option>
@@ -1037,7 +1039,7 @@
                                             <div class="col3">
                                                 <select id="selectSize">
                                                     <option>yes</option>
-                                                    <option>new home snippet</option>
+                                                    <option>homenew</option>
                                                     <option>no</option>
                                                     <option>partially</option>
                                                     <option>inaccurate</option>
@@ -1136,7 +1138,7 @@
                                         </td>
                                         <td>
                                             <div class="col3">
-                                                <select id="selectAuxImageURL">
+                                                <select id="selectAuximageurl">
                                                     <option>yes</option>
                                                     <option>no</option>
                                                     <option>partially</option>
@@ -1163,7 +1165,7 @@
                                         </td>
                                         <td>
                                             <div class="col3">
-                                                <select id="selectDeepURL">
+                                                <select id="selectDeepurl">
                                                     <option>yes</option>
                                                     <option>no</option>
                                                     <option>partially</option>

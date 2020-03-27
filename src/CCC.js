@@ -116,12 +116,11 @@ function getWaitingInfo(value) {
     }
     return (selection[value] || selection['default']);
 }
-// Add Eventlistener
 $(document).ready(function () {
     // make stuff draggable
     $("#MappingWrapper").draggable();
     $(".modal_main").draggable();
-
+    // Add Eventlistener
     // buttons
     $('#submit1').click(function (e) {
         new AnalyzeCSV(e);
@@ -139,9 +138,9 @@ $(document).ready(function () {
         var uploadCheck = document.getElementById("uploadFormat").value;
         data = new FormData(this);
         if (uploadCheck == "csv") {
-            new UploadCSV(e,data)
+            new UploadCSV(e, data)
         } else {
-            new UploadXML(e,data)
+            new UploadXML(e, data)
         }
     }));
     $('#crossSign').click(function () {
@@ -183,7 +182,8 @@ $(document).ready(function () {
         userActions.CloseFeedbackBuilder();
         checkedKey = false;
     });
-    $('#Jira').click(function () {;
+    $('#Jira').click(function () {
+        ;
         generateSuggestions();
         openPopUp();
     });
@@ -246,7 +246,7 @@ function openPopUp() {
 ==============================================================================================================================*/
 // Set Mapping Data to evalute Table by Hand
 function MappingOpen() {
-    
+
 }
 function MappingClose() {
     $("#MappingWrapper").toggle();
@@ -291,7 +291,7 @@ function MappingValidate() {
     validateNew = false;
 }
 function setMapping() {
-    
+
 }
 // hiding content part 
 $(document).ready(function () {

@@ -2,7 +2,7 @@ class ValidateAndPreview {
     constructor(maxSamples) {
         if (document.getElementById('FeedTable') != undefined) {
             this.maxtableColumns = document.getElementById('FeedTable').rows[0].cells.length;
-            this.tableLines = document.getElementById('FeedTable').rows.length;            
+            this.tableLines = document.getElementById('FeedTable').rows.length;
         } else {
             let urlRegex = /\b(?:(?:https?|ftp|file):\/\/\/?|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/;
             if (document.getElementById('feedURL').value.length == 0 || !document.getElementById('feedURL').value.match(urlRegex)) {
@@ -50,7 +50,7 @@ class ValidateAndPreview {
             this.validateTable(allNames[i], this.allAliases[i], this.table, this.tableLines);
         }
         this.preSelectionTemplateCol2False(this.arrFalse);
-        if(this.table != undefined && this.table != null){
+        if (this.table != undefined && this.table != null) {
             this.validationTableWindow(this.tableLines, this.arrFalse);
             this.removeAndReplaceAmperSigns();
         }
@@ -135,8 +135,8 @@ class ValidateAndPreview {
             this.arrFalse[7] = true;
         }
         if (Col1 == allNames[8]) {
-            $('input[id="2ndsubcategorybuilder"]').prop('checked', true);
-            $("input[class=2ndsubcategory][value='yes']").prop("checked", true);
+            $('input[id="secondsubcategorybuilder"]').prop('checked', true);
+            $("input[class=secondsubcategory][value='yes']").prop("checked", true);
             this.arrFalse[8] = true;
         }
         if (Col1 == allNames[9]) {
@@ -247,8 +247,8 @@ class ValidateAndPreview {
 
         }
         if (arrFalse[8] == false) {
-            $('input[id="2ndsubcategorybuilder"]').prop('checked', true);
-            $("input[class=2ndsubcategory][value='no']").prop("checked", true);
+            $('input[id="secondsubcategorybuilder"]').prop('checked', true);
+            $("input[class=secondsubcategory][value='no']").prop("checked", true);
 
         }
         if (arrFalse[9] == false) {
@@ -344,7 +344,7 @@ class ValidateAndPreview {
 
         }
         if (x == allNames[8] && y == true && z < 80) {
-            $("#select2ndsubcategory").val("partially");
+            $("#selectSecondsubcategory").val("partially");
 
         }
         if (x == allNames[10] && y == true && z < 10) {
@@ -423,7 +423,7 @@ class ValidateAndPreview {
 
         }
         if (x == allNames[8] && y == true && z == 0) {
-            $("#select2ndsubcategory").val("no");
+            $("#selectSecondsubcategory").val("no");
 
         }
         if (x == allNames[9] && y == true && z == 0) {
@@ -905,16 +905,11 @@ class ValidateAndPreview {
 
     }
     validationTableWindow(tableLines, arrFalse) {
-
-
         tableLines -= 1;
         var HeaderAmount = document.getElementById("FeedTable").rows[0].cells.length;
         var HeaderCheck = HeaderAmount - 1;
-        if (schalter === true) {
-            var writelocation = document.getElementById("check2");
-        } else {
-            var writelocation = document.getElementById("check");
-        }
+        var writelocation = document.getElementById("check");
+        (schalter === true) ? writelocation = document.getElementById("check2") : "";
 
 
         for (var i = 0; i < HeaderAmount; i++) {
@@ -1036,6 +1031,7 @@ class ValidateAndPreview {
         var TableWindowRow = document.createElement("TR");
         TableWindowRow.setAttribute("id", "Header");
 
+        //based on allNames 
         var myNamingNumbers = [0, 1, 2, 4, 5];
 
         for (var q = 0; q < myNamingNumbers.length; q++) {
@@ -1058,7 +1054,7 @@ class ValidateAndPreview {
 
 
         /**************************************************************************************************************************
-        setting up the 2nd Row
+        setting up the 2nd Row based on the feed attribute names
         */
         var TableWindowRow = document.createElement("TR");
         TableWindowRow.setAttribute("id", "Value");
@@ -1147,6 +1143,7 @@ class ValidateAndPreview {
 
         /************************************************************************************************************************
         setting up the 4th Row //allNames[MappingArray[q]] -> is the Name of Mapping Attributes // tester is % of
+        100 % (5054/5053) / 38.79 %(1960/5053) etc.
         */
         var checkemptycounter = 0;
         var TableWindowRow = document.createElement("TR");
@@ -1172,6 +1169,8 @@ class ValidateAndPreview {
             }
             if (HeaderArray[MappingArray[myNamingNumbers[q]]] == undefined || arrFalse[myNamingNumbers[q]] == false) {
                 TableWindowHeaderValue.setAttribute("class", "missing");
+            } else if (tester <= Number(0)) {
+                TableWindowHeaderValue.setAttribute("class", "missingEmpty");
             } else if (tester <= Number(10)) {
                 TableWindowHeaderValue.setAttribute("class", "missingwithNumber");
             } else if (tester <= Number(50)) {
@@ -1210,6 +1209,8 @@ class ValidateAndPreview {
             }
             if (HeaderArray[MappingArray[myNamingNumbers[q]]] == undefined || arrFalse[myNamingNumbers[q]] == false) {
                 TableWindowHeaderValue.setAttribute("class", "missing");
+            } else if (tester <= Number(0)) {
+                TableWindowHeaderValue.setAttribute("class", "missingEmpty");
             } else if (tester <= Number(10)) {
                 TableWindowHeaderValue.setAttribute("class", "missingwithNumber");
             } else if (tester <= Number(50)) {
@@ -1357,6 +1358,8 @@ class ValidateAndPreview {
             }
             if (HeaderArray[MappingArray[myNamingNumbers[q]]] == undefined || arrFalse[myNamingNumbers[q]] == false) {
                 TableWindowHeaderValue.setAttribute("class", "missingwithNumber");
+            } else if (tester <= Number(0)) {
+                TableWindowHeaderValue.setAttribute("class", "missingEmpty");
             } else if (tester <= Number(10)) {
                 TableWindowHeaderValue.setAttribute("class", "missingwithNumber");
             } else {
@@ -1519,7 +1522,7 @@ class ValidateAndPreview {
 
         //writelocation.innerHTML += '<br>';
         //<br><h2><strong>Feed preview</strong></h2>
-        
+
     }
     removeAndReplaceAmperSigns() {
         $(".removeAmp").attr('href', function (i, value) {

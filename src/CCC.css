@@ -456,6 +456,10 @@ table#TableWindow td.missing{
 	font-size: 26;
 	padding: 0;
 }
+table#TableWindow td.missingEmpty{
+	background-color: rgba(255,107,107,0.5);
+	color: #990000;
+}
 table#TableWindow td.missingwithNumber{
 	background-color: #efefefff;
 	color: #666666;
