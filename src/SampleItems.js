@@ -116,8 +116,18 @@ class SampleItems {
         var randomDeliveryTime = this.getItemDetails("DeliveryTime", randomNumber);
         var randomColor = this.getItemDetails("Color", randomNumber);
         var randomSKU = this.getItemDetails("SKU", randomNumber);
+        var randomAuxImage = this.getItemDetails("AuxImage", randomNumber);
+
 
         var LI = document.createElement("LI");
+        if(randomAuxImage != "" && randomAuxImage != undefined && randomAuxImage != null){
+            LI.addEventListener("mouseenter", function (event) {
+                auxImage.style.display = "inherit";
+            }, false);
+            LI.addEventListener("mouseleave", function (event) {
+                auxImage.style.display = "none";;
+            }, false);
+        }
         var aLink = document.createElement("A");
         aLink.setAttribute("href", randomDeepURL);
         aLink.setAttribute("target", "_blank");
@@ -126,11 +136,17 @@ class SampleItems {
         aImage.setAttribute("src", randomImage);
         aImage.setAttribute("width", "100px");
         aImage.setAttribute("height", "100px");
+        var auxImage = document.createElement("IMG");
+        auxImage.setAttribute("src", randomAuxImage);
+        auxImage.setAttribute("width", "100px");
+        auxImage.setAttribute("height", "100px");
+        auxImage.style.display = "none";
 
         var aTitle = document.createElement("H4");
         aTitle.innerHTML += randomName;
         LI.appendChild(aLink);
         aLink.appendChild(aImage);
+        aLink.appendChild(auxImage);
         aLink.appendChild(aTitle);
 
         var aParagraph = document.createElement("P");

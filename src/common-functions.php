@@ -93,16 +93,16 @@ function detectDelimiter($feed){
 	$topDelimiter = max($delimiterComma, $delimiterSemicolon, $delimiterPipe, $delimiterTab);
 	if ($topDelimiter == $delimiterComma) {
 		echo "Suggested Delimiter: <strong>Comma</strong>";
-		$delimiter = ",";
+		return $delimiter = ",";
 	} elseif ($topDelimiter == $delimiterSemicolon) {
 		echo "Suggested Delimiter: <strong>Semicolon</strong>";
-		$delimiter = ";";
+		return $delimiter = ";";
 	} elseif ($topDelimiter == $delimiterPipe) {
 		echo "Suggested Delimiter: <strong>Pipe</strong>";
-		$delimiter = "|";
+		return $delimiter = "|";
 	} elseif ($topDelimiter == $delimiterTab) {
 		echo "Suggested Delimiter: <strong>Tab</strong>";
-		$delimiter = "\t";
+		return  $delimiter = "\t";
 	} else {
 		echo "not found";
 	}
